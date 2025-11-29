@@ -1,0 +1,25 @@
+{
+  "name": "SEN'Diabète PRO",
+  "short_name": "SEN'Diabète",
+  "description": "Application médicale de suivi glycémique",
+  "start_url": "/app.html",  // ⬅️ IMPORTANT : Démarrer sur app.html
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#667eea",
+  "orientation": "portrait",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "https://i.postimg.cc/jS7RdL11/logo-v2.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://i.postimg.cc/jS7RdL11/logo-v2.png", 
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

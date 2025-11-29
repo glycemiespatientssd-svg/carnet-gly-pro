@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEN'Diabète - Application Médecin</title>
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a6fd8;
+            --secondary: #764ba2;
+            --light: #f8fafc;
+            --dark: #2d3748;
+            --gray: #718096;
+            --success: #48bb78;
+            --warning: #ed8936;
+            --danger: #f56565;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        body {
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .auth-bar {
+            background: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-bottom: 3px solid var(--primary);
+        }
+        
+        .doctor-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+        
+        .small-logo {
+            width: 24px;
+            height: 24px;
+        }
+        
+        .logout-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .logo-img {
+            width: 50px;
+            height: 50px;
+        }
+        
+        h1 {
+            color: var(--primary);
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+        
+        .scan-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            text-align: center;
+            border: 2px solid var(--primary);
+        }
+        
+        .scan-section h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .upload-area {
+            border: 3px dashed #cbd5e0;
+            border-radius: 12px;
+            padding: 50px 30px;
+            margin: 25px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: var(--light);
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: #f7fafc;
+        }
+        
+        .upload-area h3 {
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .upload-area p {
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+        
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-large {
+            padding: 16px 32px;
+            font-size: 1.1rem;
+        }
+        
+        .btn-secondary {
+            background: var(--light);
+            color: var(--dark);
+            border: 2px solid #e2e8f0;
+        }
+        
+        .image-preview {
+            max-width: 300px;
+            max-height: 200px;
+            border-radius: 10px;
+            margin: 20px auto;
+            display: block;
+            border: 2px solid var(--primary);
+            display: none;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .loading-spinner {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .results {
+            background: white;
+            color: var(--dark);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            display: none;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 12px 12px 0 0;
+            overflow: hidden;
+            margin-top: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 18px;
+            text-align: center;
+            cursor: pointer;
+            background: #f8fafc;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .tab.active {
+            background: white;
+            border-bottom: 3px solid var(--primary);
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 0;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .card {
+            padding: 25px;
+        }
+        
+        .card h2 {
+            color: var(--dark);
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        th {
+            background: var(--primary);
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        tr:hover {
+            background: #f7fafc;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .messages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .message-card {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .message-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        .message-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .message-card h4 {
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+        
+        .message-card p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+            margin-top: 60px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .small-text {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+        
+        .status-badge {
+            background: var(--success);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                padding: 15px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .messages-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Barre d'authentification -->
+    <div class="auth-bar">
+        <div class="doctor-info">
+            <img src="https://i.postimg.cc/jS7RdL11/logo-v2.png" alt="SEN'Diabète" class="small-logo">
+            <span id="currentDoctor">Docteur</span>
+        </div>
+        <button class="logout-btn" id="logoutBtn">Déconnexion</button>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <img src="https://i.postimg.cc/jS7RdL11/logo-v2.png" alt="SEN'Diabète" class="logo-img">
+                <div>
+                    <h1>SEN'Diabète</h1>
+                    <p class="subtitle">Application de suivi glycémique</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Section Analyse -->
+        <section class="scan-section">
+            <h2>📷 Analyser un carnet</h2>
+            <p>Photographiez le carnet pour extraire automatiquement les données</p>
+
+            <div class="upload-area" id="uploadArea" onclick="document.getElementById('imageInput').click()">
+                <h3>Cliquez pour prendre une photo</h3>
+                <p>ou glissez-déposez l'image ici</p>
+                <p class="small-text">Formats supportés : JPG, PNG - Max 5MB</p>
+            </div>
+
+            <input type="file" id="imageInput" accept="image/*" capture="environment" style="display: none;">
+
+            <img id="imagePreview" class="image-preview" alt="Aperçu du carnet">
+
+            <div class="loading" id="loading">
+                <div class="loading-spinner"></div>
+                <p>Analyse en cours...</p>
+                <p class="small-text">Extraction des données patient et mesures</p>
+            </div>
+
+            <button class="btn btn-large" id="analyzeBtn" style="display: none;" onclick="analyzeImage()">
+                Lancer l'analyse
+            </button>
+        </section>
+
+        <!-- Résultats -->
+        <div class="results" id="results">
+            <h3>📊 Résultats de l'analyse</h3>
+            <div id="extractedData"></div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn" onclick="generatePDF()">📄 Générer PDF</button>
+                <button class="btn btn-secondary" onclick="closeResults()">Fermer</button>
+            </div>
+        </div>
+
+        <!-- Navigation par onglets -->
+        <div class="tabs-container">
+            <div class="tabs">
+                <div class="tab active" data-tab="patients">👥 Patients</div>
+                <div class="tab" data-tab="historique">📊 Historique</div>
+                <div class="tab" data-tab="messages">💬 Messages</div>
+                <div class="tab" data-tab="carnets">📚 Carnets</div>
+            </div>
+
+            <!-- Onglet Patients -->
+            <div class="tab-content active" id="patients">
+                <div class="card">
+                    <h2>Liste des patients</h2>
+                    <button class="btn" onclick="showAddPatientForm()" style="margin-bottom: 20px;">
+                        + Ajouter un patient
+                    </button>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nom</th>
+                                <th>Prénom</th>
+                                <th>Téléphone</th>
+                                <th>Date inscription</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patientsTable">
+                            <!-- Rempli dynamiquement -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Onglet Historique -->
+            <div class="tab-content" id="historique">
+                <div class="card">
+                    <h2>Dernières analyses</h2>
+                    <div id="lastResults">
+                        <p style="text-align: center; color: #666; padding: 40px;">
+                            Aucune analyse récente.<br>
+                            Photographiez un carnet pour commencer.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Onglet Messages -->
+            <div class="tab-content" id="messages">
+                <div class="card">
+                    <h2>Messages prédéfinis</h2>
+                    <div class="form-group">
+                        <label>Sélectionner un patient :</label>
+                        <select id="patientSelect" onchange="loadPatientMessages()">
+                            <option value="">-- Choisir un patient --</option>
+                        </select>
+                    </div>
+                    
+                    <div class="messages-grid" id="messagesList">
+                        <!-- Messages générés dynamiquement -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Onglet Carnets -->
+            <div class="tab-content" id="carnets">
+                <div class="card">
+                    <h2>Gestion des carnets</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalCarnets">50</div>
+                            <div class="stat-label">Carnets actifs</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="usedCarnets">0</div>
+                            <div class="stat-label">Carnets utilisés</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="remainingCarnets">50</div>
+                            <div class="stat-label">Carnets restants</div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn" onclick="showGenerateCarnetForm()" style="margin-bottom: 20px;">
+                        🎫 Générer un carnet
+                    </button>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID Carnet</th>
+                                <th>Patient</th>
+                                <th>Date création</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody id="carnetsTable">
+                            <!-- Rempli dynamiquement -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <img src="https://i.postimg.cc/jS7RdL11/logo-v2.png" alt="SEN'Diabète" class="small-logo" style="margin-bottom: 10px;">
+            <p>SEN'Diabète - Solution de suivi médical</p>
+            <p class="small-text">Lecture automatique des carnets glycémiques</p>
+        </footer>
+    </div>
+
+    <script>
+        // ===== CONFIGURATION =====
+        const CONFIG = {
+            OPENAI_API_KEY: "{{OPENAI_API_KEY}}"
+        };
+
+        // ===== ÉTAT DE L'APPLICATION =====
+        let currentAnalysis = null;
+        let database = {
+            medecin: { nom: "", telephone: "", specialite: "" },
+            patients: [],
+            mesures: [],
+            carnets: [],
+            pack: { totalCarnets: 50, carnetsUtilises: 0 }
+        };
+
+        // ===== INITIALISATION =====
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!checkAuth()) return;
+            
+            initApp();
+            setupTabs();
+            setupFileUpload();
+        });
+
+        function checkAuth() {
+            const auth = localStorage.getItem('sendiabete_auth');
+            if (!auth) {
+                window.location.href = 'index.html';
+                return false;
+            }
+            const authData = JSON.parse(auth);
+            document.getElementById('currentDoctor').textContent = authData.doctorName;
+            return true;
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            if (confirm('Voulez-vous vous déconnecter ?')) {
+                localStorage.removeItem('sendiabete_auth');
+                window.location.href = 'index.html';
+            }
+        });
+
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Désactiver tous les onglets
+                    tabs.forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Activer l'onglet sélectionné
+                    this.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        }
+
+        function setupFileUpload() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('imageInput');
+
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#667eea';
+                this.style.background = '#f7fafc';
+            });
+
+            uploadArea.addEventListener('dragleave', function() {
+                this.style.borderColor = '#cbd5e0';
+                this.style.background = '#f8fafc';
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#cbd5e0';
+                this.style.background = '#f8fafc';
+                
+                if (e.dataTransfer.files.length) {
+                    handleImageFile(e.dataTransfer.files[0]);
+                }
+            });
+
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length) {
+                    handleImageFile(e.target.files[0]);
+                }
+            });
+        }
+
+        function handleImageFile(file) {
+            if (!file.type.startsWith('image/')) {
+                alert('Veuillez sélectionner une image valide');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('imagePreview');
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                document.getElementById('analyzeBtn').style.display = 'block';
+                currentAnalysis = { imageData: e.target.result };
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // ===== FONCTIONS PRINCIPALES =====
+        async function analyzeImage() {
+            if (!currentAnalysis) {
+                alert('Veuillez d\'abord sélectionner une image');
+                return;
+            }
+
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('analyzeBtn').style.display = 'none';
+
+            try {
+                const result = await processImageWithAPI(currentAnalysis.imageData);
+                showAnalysisResults(result);
+            } catch (error) {
+                alert('Erreur lors de l\'analyse: ' + error.message);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('analyzeBtn').style.display = 'block';
+            }
+        }
+
+        function showAnalysisResults(data) {
+            const resultsDiv = document.getElementById('extractedData');
+            resultsDiv.innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <h4>Patient</h4>
+                    <p><strong>Nom:</strong> ${data.patient.nom} ${data.patient.prenom}</p>
+                    <p><strong>ID:</strong> ${data.patient.id}</p>
+                    <p><strong>Période:</strong> ${data.patient.periode}</p>
+                </div>
+                <div>
+                    <h4>Mesures extraites</h4>
+                    <p>${data.mesures.length} jours de données analysés</p>
+                </div>
+            `;
+            
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function closeResults() {
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('analyzeBtn').style.display = 'none';
+            currentAnalysis = null;
+        }
+
+        function generatePDF() {
+            alert('Fonction PDF à implémenter');
+        }
+
+        // ===== FONCTIONS DE GESTION =====
+        function initApp() {
+            const saved = localStorage.getItem('sendiabete_data');
+            if (saved) {
+                database = JSON.parse(saved);
+            }
+            updatePatientsTable();
+            updateCarnetsTable();
+            loadPatientSelect();
+        }
+
+        function showAddPatientForm() {
+            const nom = prompt('Nom du patient:');
+            if (!nom) return;
+
+            const prenom = prompt('Prénom du patient:');
+            if (!prenom) return;
+
+            const tel = prompt('Téléphone:');
+            if (!tel) return;
+
+            const patient = {
+                id: 'P' + (database.patients.length + 1).toString().padStart(3, '0'),
+                nom: nom,
+                prenom: prenom,
+                telephone: tel,
+                dateCreation: new Date().toISOString().split('T')[0]
+            };
+
+            database.patients.push(patient);
+            saveData();
+            updatePatientsTable();
+            loadPatientSelect();
+            
+            alert('Patient ' + patient.id + ' ajouté avec succès');
+        }
+
+        function updatePatientsTable() {
+            const tbody = document.getElementById('patientsTable');
+            tbody.innerHTML = '';
+
+            database.patients.forEach(patient => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${patient.id}</td>
+                    <td>${patient.nom}</td>
+                    <td>${patient.prenom}</td>
+                    <td>${patient.telephone}</td>
+                    <td>${patient.dateCreation}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function loadPatientSelect() {
+            const select = document.getElementById('patientSelect');
+            select.innerHTML = '<option value="">-- Choisir un patient --</option>';
+            
+            database.patients.forEach(patient => {
+                const option = document.createElement('option');
+                option.value = patient.id;
+                option.textContent = `${patient.nom} ${patient.prenom} (${patient.id})`;
+                select.appendChild(option);
+            });
+        }
+
+        function loadPatientMessages() {
+            // À implémenter
+        }
+
+        function showGenerateCarnetForm() {
+            if (database.patients.length === 0) {
+                alert('Veuillez d\'abord ajouter des patients');
+                return;
+            }
+
+            const patientId = prompt('ID du patient (ex: P001):');
+            if (!patientId) return;
+
+            const carnet = {
+                id: 'CARN-' + (database.carnets.length + 1).toString().padStart(3, '0'),
+                patientId: patientId,
+                dateCreation: new Date().toISOString().split('T')[0],
+                statut: 'ACTIF'
+            };
+
+            database.carnets.push(carnet);
+            database.pack.carnetsUtilises++;
+            saveData();
+            updateCarnetsTable();
+            
+            alert('Carnet ' + carnet.id + ' généré avec succès');
+        }
+
+        function updateCarnetsTable() {
+            const tbody = document.getElementById('carnetsTable');
+            tbody.innerHTML = '';
+
+            database.carnets.forEach(carnet => {
+                const patient = database.patients.find(p => p.id === carnet.patientId);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${carnet.id}</td>
+                    <td>${patient ? patient.nom + ' ' + patient.prenom : 'N/A'}</td>
+                    <td>${carnet.dateCreation}</td>
+                    <td><span class="status-badge">${carnet.statut}</span></td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            document.getElementById('usedCarnets').textContent = database.pack.carnetsUtilises;
+            document.getElementById('remainingCarnets').textContent = database.pack.totalCarnets - database.pack.carnetsUtilises;
+        }
+
+        function saveData() {
+            localStorage.setItem('sendiabete_data', JSON.stringify(database));
+        }
+
+        // Fonction simulée pour l'API (à remplacer par l'implémentation réelle)
+        async function processImageWithAPI(imageData) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve({
+                        patient: {
+                            nom: "DIALLO",
+                            prenom: "Aminata",
+                            id: "P001",
+                            periode: "25/11/2024 - 01/12/2024"
+                        },
+                        mesures: [
+                            { date: "25/11/2024", matin: 0.95, midi: 1.12, soir: 1.05 },
+                            { date: "26/11/2024", matin: 1.02, midi: 1.35, soir: 0.98 }
+                        ]
+                    });
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

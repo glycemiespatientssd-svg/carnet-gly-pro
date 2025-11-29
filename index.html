@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEN'Diabète - Connexion</title>
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a6fd8;
+            --light: #f8fafc;
+            --dark: #2d3748;
+            --gray: #718096;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .logo {
+            margin-bottom: 30px;
+        }
+        
+        .logo-img {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 15px;
+        }
+        
+        h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+        
+        .login-form {
+            text-align: left;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .admin-link {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .admin-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .pack-info {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 25px;
+            text-align: center;
+        }
+        
+        .pack-info h3 {
+            color: #059669;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+        
+        .pack-info p {
+            color: #047857;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <img src="https://i.postimg.cc/jS7RdL11/logo-v2.png" alt="SEN'Diabète" class="logo-img">
+            <h1>SEN'Diabète</h1>
+            <p class="subtitle">Application médicale</p>
+        </div>
+
+        <form class="login-form" id="loginForm">
+            <div class="form-group">
+                <label for="doctorName">Nom du médecin :</label>
+                <input type="text" id="doctorName" placeholder="Dr. Sow" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="accessCode">Code d'accès :</label>
+                <input type="text" id="accessCode" placeholder="4 2 8 7" required>
+            </div>
+
+            <button type="submit" class="btn">
+                Se connecter
+            </button>
+        </form>
+
+        <div class="admin-link">
+            <a href="admin.html">🔧 Accès administrateur</a>
+        </div>
+
+        <div class="pack-info">
+            <h3>📦 Pack Professionnel</h3>
+            <p>50 carnets + Application complète</p>
+            <p><strong>80,000 FCFA</strong></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const doctorName = document.getElementById('doctorName').value;
+            const accessCode = document.getElementById('accessCode').value;
+            
+            if (doctorName && accessCode) {
+                const authData = {
+                    doctorName: doctorName,
+                    accessCode: accessCode,
+                    lastLogin: new Date().toISOString()
+                };
+                
+                localStorage.setItem('sendiabete_auth', JSON.stringify(authData));
+                window.location.href = 'app.html';
+            }
+        });
+
+        // Vérifier si déjà connecté
+        window.addEventListener('load', function() {
+            const authData = localStorage.getItem('sendiabete_auth');
+            if (authData) {
+                window.location.href = 'app.html';
+            }
+        });
+    </script>
+</body>
+</html>
