@@ -1,0 +1,74 @@
+🩺 SEN'Diabète PRO - Guide d'Installation
+
+📦 Fichiers à Télécharger
+
+1. `index.html` - Page de connexion
+2. `app.html` - Application principale  
+3. `styles.css` - Styles de l'application
+4. `manifest.json` - Configuration PWA
+5. `service-worker.js` - Cache hors ligne
+
+🚀 Déploiement Rapide
+
+Option 1 : GitHub Pages (Gratuit)
+1. Créer un compte GitHub
+2. Créer un nouveau dépôt
+3. Uploader tous les fichiers
+4. Activer GitHub Pages dans les settings
+5. Votre application est en ligne !
+
+Option 2 : Netlify (Gratuit)
+1. Aller sur [netlify.com](https://netlify.com)
+2. Glisser-déposer le dossier des fichiers
+3. L'URL est générée automatiquement
+
+Option 3 : Vercel (Gratuit)
+1. Aller sur [vercel.com](https://vercel.com)
+2. Importer depuis GitHub
+3. Déploiement automatique
+
+📱 Installation sur Mobile
+
+Pour le Médecin :
+1. Ouvrir le lien de l'application dans Chrome/ Safari
+2. Cliquer "Partager" → "Ajouter à l'écran d'accueil"
+3. L'application s'installe comme une app native
+
+Fonctionnalités Hors Ligne :
+- ✅ Consultation des patients
+- ✅ Génération de PDF
+- ✅ Messages WhatsApp
+- ✅ Gestion des carnets
+
+ 🔑 Configuration API OpenAI
+
+1. Obtenir une clé API sur [platform.openai.com](https://platform.openai.com)
+2. Coût estimé : ~70 FCFA par patient/mois
+3. La clé reste sur le téléphone du médecin
+
+ 💰 Business Model
+
+ Pack SEN'Diabète PRO - 80,000 FCFA
+- 50 carnets personnalisés
+- Application PWA complète
+- Reconnaissance IA intégrée
+- Support 1 mois
+
+Argumentaire Commercial :
+"Une photo du carnet → L'IA lit le patient et analyse les glycémies en 20 secondes"
+
+🎯 Flux Médecin
+
+1. Code d'accès (4 chiffres hebdomadaires)
+2. Photo du carnet patient
+3. IA extrait tout automatiquement
+4. PDF généré avec statistiques
+5. Messages WhatsApp personnalisés
+
+ 📞 Support
+
+Pour toute question :
+- Email : contact@sendiabete.com
+- WhatsApp : +33 6 17 97 77 87
+
+🎉 Félicitations ! Votre application médicale intelligente est prête !
